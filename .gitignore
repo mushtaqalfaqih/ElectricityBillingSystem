@@ -38,3 +38,5 @@ test.xlsx
 test_*.py
 backend/test.pdf
 backend/test.xlsx
+docs/mermaid.min.js
+docs/render_diagrams.js

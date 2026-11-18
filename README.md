@@ -23,7 +23,7 @@
 
 ---
 
-## 📸 معرض صور النظام (Screenshots Showcase)
+## 📸 معرض صور النظام الموثقة (Screenshots Showcase)
 
 <p align="center">
   <b>1. لوحة المؤشرات والإحصائيات الحية (Dashboard & Analytics)</b><br>
@@ -67,7 +67,14 @@
 
 ---
 
-## 🏛️ الهيكلية التقنية الشاملة للنظام (System Architecture)
+## 🏛️ 1. الهيكلية التقنية الشاملة للنظام (System Architecture)
+
+<p align="center">
+  <img src="docs/diagrams/01_system_architecture.png" alt="الهيكلية الشاملة للنظام" width="95%" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" />
+</p>
+
+<details>
+<summary><b>🔍 اضغط هنا لعرض كود المخطط السهمي التفاعلي (Mermaid Code)</b></summary>
 
 ```mermaid
 flowchart TD
@@ -102,7 +109,7 @@ flowchart TD
     end
 
     subgraph StorageLayer ["طبقة قواعد البيانات والملفات (Storage & Database)"]
-        PG[(PostgreSQL Database)]
+        PG[("PostgreSQL Database")]
         STATIC["WhiteNoise Compressed Static Engine"]
     end
 
@@ -113,9 +120,18 @@ flowchart TD
     BackgroundLayer --> StorageLayer
 ```
 
+</details>
+
 ---
 
-## 🗄️ مخطط الكيانات والعلاقات (Database Entity-Relationship Diagram)
+## 🗄️ 2. مخطط الكيانات والعلاقات (Database Entity-Relationship Diagram)
+
+<p align="center">
+  <img src="docs/diagrams/02_database_erd.png" alt="مخطط الكيانات والعلاقات" width="95%" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" />
+</p>
+
+<details>
+<summary><b>🔍 اضغط هنا لعرض كود مخطط الكيانات (Mermaid Code)</b></summary>
 
 ```mermaid
 erDiagram
@@ -131,62 +147,55 @@ erDiagram
 
     BUILDING {
         int id PK
-        string name "اسم المبنى"
-        string code UK "رمز المبنى الفريد"
+        string name
+        string code UK
     }
-
     ROOM {
         int id PK
-        int room_number "رقم الغرفة"
+        int room_number
         int building_id FK
-        string qr_code UK "رمز QR الدائم"
+        string qr_code UK
     }
-
     STUDENT {
         int id PK
-        string name "اسم الطالب"
-        string national_id UK "الهوية الوطنية"
-        string phone "رقم الجوال"
-        string status "active / evacuated"
+        string name
+        string national_id UK
+        string phone
+        string status
     }
-
     METER {
         int id PK
         int room_id FK
-        string meter_serial UK "الرقم التسلسلي للعداد"
-        string connection_status "connected / disconnected"
+        string meter_serial UK
+        string connection_status
         datetime last_reading_at
     }
-
     INVOICE {
         int id PK
         int room_id FK
-        decimal reading_old "القراءة السابقة"
-        decimal reading_new "القراءة الحالية"
-        decimal consumption "كمية الاستهلاك"
-        decimal final_amount "المبلغ النهائي"
-        string status "pending / approved / paid"
-        boolean is_overdue "حالة التأخر"
+        decimal reading_old
+        decimal reading_new
+        decimal consumption
+        decimal final_amount
+        string status
+        boolean is_overdue
         datetime created_at
         datetime paid_at
     }
-
     INSTALLMENT_PLAN {
         int id PK
         int room_id FK
-        decimal total_amount "إجمالي المبلغ المقسط"
-        string status "active / completed / defaulted"
+        decimal total_amount
+        string status
         int number_of_installments
     }
-
     SYSTEM_SETTINGS {
         int id PK
-        decimal tariff_rate "سعر الكيلوواط"
-        int payment_deadline_hours "مهلة السداد بالساعات"
-        decimal service_fee "رسوم الخدمة"
-        decimal reconnect_debt_threshold "حد إعادة التوصيل"
+        decimal tariff_rate
+        int payment_deadline_hours
+        decimal service_fee
+        decimal reconnect_debt_threshold
     }
-
     AUDIT_LOG {
         int id PK
         int actor_id FK
@@ -197,11 +206,20 @@ erDiagram
     }
 ```
 
+</details>
+
 ---
 
-## 🔄 دورة حياة الفاتورة وفصل/توصيل الخدمة الآلي (Billing & Auto-Action Flows)
+## 🔄 3. مخططات التتابع وسير العمليات (Sequence Diagrams)
 
-### 1. مخطط تتابع عملية التحصيل وإعادة التوصيل الفورية (Payment & Auto-Reconnect)
+### أ. تتابع عملية التحصيل وإعادة التوصيل الفورية (Payment & Auto-Reconnect)
+
+<p align="center">
+  <img src="docs/diagrams/03_sequence_payment.png" alt="مخطط تتابع التحصيل" width="95%" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" />
+</p>
+
+<details>
+<summary><b>🔍 اضغط هنا لعرض كود المخطط (Mermaid Code)</b></summary>
 
 ```mermaid
 sequenceDiagram
@@ -229,7 +247,18 @@ sequenceDiagram
     Web-->>Student: إشعار أخضر وتحديث الخريطة التفاعلية
 ```
 
-### 2. مخطط تتابع الفحص الدوري والفصل الآلي عند التعثر (Hourly Auto-Disconnect)
+</details>
+
+<br>
+
+### ب. تتابع الفحص الدوري والفصل الآلي عند التعثر (Hourly Auto-Disconnect)
+
+<p align="center">
+  <img src="docs/diagrams/04_sequence_disconnect.png" alt="مخطط تتابع الفصل الآلي" width="95%" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" />
+</p>
+
+<details>
+<summary><b>🔍 اضغط هنا لعرض كود المخطط (Mermaid Code)</b></summary>
 
 ```mermaid
 sequenceDiagram
@@ -260,11 +289,20 @@ sequenceDiagram
     end
 ```
 
+</details>
+
 ---
 
-## 🚦 المخططات الحالية لحالات النظام (State Machine Diagrams)
+## 🚦 4. المخططات الحالية لحالات النظام (State Machine Diagrams)
 
-### 1. دورة حياة الفاتورة (Invoice State Diagram)
+### أ. دورة حياة الفاتورة (Invoice State Machine)
+
+<p align="center">
+  <img src="docs/diagrams/05_state_invoice.png" alt="دورة حياة الفاتورة" width="85%" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" />
+</p>
+
+<details>
+<summary><b>🔍 اضغط هنا لعرض كود مخطط الحالات (Mermaid Code)</b></summary>
 
 ```mermaid
 stateDiagram-v2
@@ -272,13 +310,24 @@ stateDiagram-v2
     Pending --> Approved : اعتماد المحاسب / المشرف
     Pending --> Cancelled : إلغاء لوجود خطأ في القراءة
     Approved --> Paid : سداد كامل المبلغ قبل المهلة
-    Approved --> Overdue : انقضاء مهلة السداد (payment_deadline_hours)
+    Approved --> Overdue : انقضاء مهلة السداد (Deadline Passed)
     Overdue --> Paid : سداد متأخر + احتساب غرامة التأخير
     Paid --> [*]
     Cancelled --> [*]
 ```
 
-### 2. حالات العداد الذكي (Smart Meter Connection States)
+</details>
+
+<br>
+
+### ب. حالات العداد الذكي (Smart Meter Connection States)
+
+<p align="center">
+  <img src="docs/diagrams/06_state_meter.png" alt="حالات العداد الذكي" width="85%" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" />
+</p>
+
+<details>
+<summary><b>🔍 اضغط هنا لعرض كود مخطط الحالات (Mermaid Code)</b></summary>
 
 ```mermaid
 stateDiagram-v2
@@ -291,9 +340,11 @@ stateDiagram-v2
     Maintenance --> Connected : انتهاء أعمال الصيانة
 ```
 
+</details>
+
 ---
 
-## 👥 مصفوفة الصلاحيات والأدوار (Role-Based Access Matrix - RBAC)
+## 👥 5. مصفوفة الصلاحيات والأدوار (Role-Based Access Matrix - RBAC)
 
 | الوظيفة / الإجراء | المشرف العام (Admin) | المحاسب (Accountant) | المندوب (Delegate) | أمين الصندوق (Cashier) |
 | :--- | :---: | :---: | :---: | :---: |
@@ -309,7 +360,7 @@ stateDiagram-v2
 
 ---
 
-## 🔌 واجهات برمجة التطبيقات الأساسية (API Endpoints Overview)
+## 🔌 6. واجهات برمجة التطبيقات الأساسية (API Endpoints Overview)
 
 | Method | Endpoint | الصلاحية المطلوبة | الوصف |
 | :--- | :--- | :--- | :--- |
@@ -329,25 +380,22 @@ stateDiagram-v2
 
 ---
 
-## 🛠️ دليل التثبيت والتشغيل المحلي (Installation & Setup)
+## 🛠️ 7. دليل التثبيت والتشغيل المحلي (Installation & Setup)
 
-### 1. المتطلبات الأساسية (Prerequisites)
+### المتطلبات الأساسية (Prerequisites)
 * **Python** (الإصدار 3.11 أو أحدث)
 * **Node.js** (الإصدار 18 أو 20 أو أحدث) مع **npm**
 * **PostgreSQL** (الإصدار 14 أو أحدث)
 
 ---
 
-### 2. إعداد الخادم الخلفي (Backend Setup)
+### إعداد وتشغيل الخادم الخلفي (Backend Setup)
 
 ```bash
-# 1. الدخول إلى مجلد المشروع وتفعيل البيئة الافتراضية
+# 1. تفعيل البيئة الافتراضية
 cd ElectricityBillingSystem
-python -m venv venv
-# لنظام Windows:
-venv\Scripts\activate
-# لنظام Linux/macOS:
-source venv/bin/activate
+venv\Scripts\activate   # لنظام Windows
+# source venv/bin/activate # لنظام Linux/macOS
 
 # 2. تثبيت الحزم البرمجية
 pip install -r backend/requirements.txt
@@ -360,19 +408,17 @@ pip install -r backend/requirements.txt
 # DB_PORT=5432
 # DEBUG=True
 
-# 4. تطبيق الترحيلات على قاعدة البيانات
+# 4. تطبيق الترحيلات وتجميع الملفات الثابتة
 python backend/manage.py migrate
-
-# 5. تجميع الملفات الثابتة
 python backend/manage.py collectstatic --noinput
 
-# 6. تشغيل خادم التطوير
+# 5. تشغيل خادم التطوير
 python backend/manage.py runserver 127.0.0.1:8000
 ```
 
 ---
 
-### 3. إعداد لوحة التحكم (Frontend Setup)
+### إعداد وتشغيل لوحة التحكم (Frontend Setup)
 
 ```bash
 # 1. الدخول إلى مجلد لوحة التحكم
@@ -385,44 +431,42 @@ npm install
 npm run dev
 ```
 
-ستفتح الواجهة على الرابط: `http://127.0.0.1:5173/`
+الرابط المحلي للواجهة: `http://127.0.0.1:5173/`
 
 ---
 
-## 🚀 النشر على السحابة (Cloud Deployment on Render)
+## 🚀 8. النشر السحابي التلقائي (Cloud Deployment on Render)
 
-المشروع مُهيأ بالكامل وجاهز للنشر المباشر عبر ملف `render.yaml` الصريح:
-* **قاعدة بيانات مدارة**: PostgreSQL مجانية ومنشأة تلقائياً.
-* **الخادم الخلفي (Web Service)**: يعمل ببيئة Python مع خادم `Gunicorn` و `WhiteNoise` للملفات الثابتة.
-* **الواجهة الأمامية (Static Site)**: بناء آلي عبر Vite ونشر عالي السرعة مع توجيه المسارات `/* -> /index.html`.
+المشروع مُهيأ بالكامل للنشر بنقرة واحدة عبر ملف `render.yaml`:
+* **PostgreSQL Database**: قاعدة بيانات سحابية مدارة.
+* **Backend Web Service**: خادم بايثون عالي الأداء مع `Gunicorn` و `WhiteNoise`.
+* **Frontend Static Site**: موقع ثابت على شبكة CDN العالمية مع دعم إعادة التوجيه للـ SPA.
 
 ---
 
-## 📁 هيكلية مجلدات المشروع (Repository Structure)
+## 📁 9. هيكلية مجلدات المشروع (Repository Structure)
 
 ```text
 ElectricityBillingSystem/
 ├── README.md                     # التوثيق الشامل والرسمي للمشروع
 ├── render.yaml                   # ملف إعدادات النشر السحابي (Infrastructure as Code)
-├── docs/                         # التوثيقات والوسائط
+├── docs/                         # التوثيقات والوسائط الرسومية
+│   ├── diagrams/                 # المخططات الهندسية والسهمية (High-Res Images)
 │   └── screenshots/              # لقطات شاشة موثقة للواجهات الحية
 ├── backend/                      # خادم Django REST Framework
 │   ├── api/                      # التطبيق الرئيسي (Models, Views, Serializers, Tasks)
 │   │   ├── services/             # طبقة الخدمات (Report, Meter, Payment, Audit)
 │   │   ├── models.py             # نماذج قاعدة البيانات (Building, Room, Invoice, ...)
-│   │   ├── views.py              # الـ ViewSets ونقاط النهاية (Endpoints)
-│   │   ├── tasks.py              # المهام المجدولة (APScheduler Functions)
-│   │   └── authentication.py     # مصادقة JWT المخصصة
+│   │   ├── views.py              # نقاط النهاية (Endpoints)
+│   │   └── tasks.py              # المهام المجدولة (APScheduler)
 │   ├── assets/fonts/             # الخطوط المعتمدة لتصدير الـ PDF العربي (Cairo Font)
-│   ├── config/                   # إعدادات المشروع الرئيسية (settings.py, urls.py)
 │   └── manage.py                 # موجه أوامر Django
 └── admin-dashboard/              # واجهة المستخدم React 19 + Vite
     ├── src/
     │   ├── api/                  # عميل Axios ومعالجة تجديد التوكنات
     │   ├── components/           # المكونات (FloorPlanSection, ReportsSection, ...)
-    │   ├── context/              # سياق المصادقة وصلاحيات الجلسة (AuthContext)
-    │   ├── pages/                # الصفحات (DashboardPage, LoginPage, RoomPaymentPage)
-    │   └── App.jsx               # موجه المسارات والتنبيهات
+    │   ├── context/              # سياق المصادقة وجلسة العمل (AuthContext)
+    │   └── pages/                # الصفحات (DashboardPage, LoginPage, ...)
     ├── index.html
     └── package.json
 ```
