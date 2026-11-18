@@ -8,7 +8,7 @@ services:
   - type: web
     name: electricity-backend
     env: python
-    buildCommand: "cd backend && pip install -r requirements.txt && python manage.py migrate"
+    buildCommand: "cd backend && pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput"
     startCommand: "cd backend && python -c \"import os, django; os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings'); django.setup(); from api.models import User; User.objects.get_or_create(username='admin_main', defaults={'password_hash': '12345678', 'role': 'admin'})\" && gunicorn config.wsgi:application"
     plan: free
     envVars:

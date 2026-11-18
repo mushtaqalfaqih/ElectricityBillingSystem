@@ -140,6 +140,9 @@ export default function DashboardPage() {
         ]);
         setComplaints(cRes.data.results || cRes.data);
         setStudents(sRes.data.results || sRes.data);
+      } else if (currentTab === 'floor_plan') {
+        const res = await axiosClient.get('/buildings/');
+        setBuildings(res.data);
       }
     } catch (err) {
       console.error(err);

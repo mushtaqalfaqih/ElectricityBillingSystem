@@ -68,8 +68,8 @@ class BuildingViewSet(viewsets.ModelViewSet):
                 'search_code': search_code,
                 'student_name': student.name if student else 'شاغرة',
                 'status': room_status,
-                'consumption': latest_invoice.consumption if latest_invoice else 0.0,
-                'amount_due': latest_invoice.final_amount if latest_invoice else 0.0
+                'consumption': float(latest_invoice.consumption) if (latest_invoice and latest_invoice.consumption is not None) else 0.0,
+                'amount_due': float(latest_invoice.final_amount) if (latest_invoice and latest_invoice.final_amount is not None) else 0.0
             })
             
         return Response({
@@ -381,6 +381,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
+class SystemSettingsView(APIView):
     """
     عرض وتحديث الإعدادات المالية العامة للنظام — Singleton.
 

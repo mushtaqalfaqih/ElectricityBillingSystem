@@ -1,34 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axiosClient from '../api/axiosClient';
+import { toast } from 'react-hot-toast';
 
-export default function FloorPlanSection({ buildings }) {
+export default function FloorPlanSection({ buildings = [] }) {
   const [selectedBuilding, setSelectedBuilding] = useState(buildings[0]?.id || '');
   const [floorPlanData, setFloorPlanData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (buildings.length > 0 && !selectedBuilding) {
-      setSelectedBuilding(buildings[0].id);
+    if (buildings.length > 0) {
+      const exists = buildings.some(b => String(b.id) === String(selectedBuilding));
+      if (!selectedBuilding || !exists) {
+        setSelectedBuilding(buildings[0].id);
+      }
     }
-  }, [buildings]);
+  }, [buildings, selectedBuilding]);
 
-  useEffect(() => {
-    if (selectedBuilding) {
-      fetchFloorPlan();
-    }
-  }, [selectedBuilding]);
-
-  const fetchFloorPlan = async () => {
+  const fetchFloorPlan = useCallback(async (buildingId) => {
+    if (!buildingId) return;
     setLoading(true);
     try {
-      const res = await axiosClient.get(`/buildings/${selectedBuilding}/floor_plan/`);
+      const res = await axiosClient.get(`/buildings/${buildingId}/floor_plan/`);
       setFloorPlanData(res.data);
     } catch (err) {
       console.error(err);
-      alert('خطأ في جلب بيانات الخريطة');
+      toast.error('خطأ في جلب بيانات الخريطة');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  };
+  }, []);
+
+  useEffect(() => {
+    if (selectedBuilding) {
+      fetchFloorPlan(selectedBuilding);
+    }
+  }, [selectedBuilding, fetchFloorPlan]);
 
   const getStatusColor = (status) => {
     switch(status) {

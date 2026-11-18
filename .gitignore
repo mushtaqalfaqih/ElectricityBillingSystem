@@ -19,6 +19,8 @@ ENV/
 .env
 db.sqlite3
 db.sqlite3-journal
+staticfiles/
+backend/staticfiles/
 
 # IDEs and Editors
 .vscode/
@@ -29,3 +31,10 @@ db.sqlite3-journal
 
 # Logs
 *.log
+
+# Test artifacts
+test.pdf
+test.xlsx
+test_*.py
+backend/test.pdf
+backend/test.xlsx
